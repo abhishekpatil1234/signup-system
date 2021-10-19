@@ -8,17 +8,23 @@
 		$email = test_input($_POST['email']);
 		$pass = test_input($_POST['pass']);
 
-		$sql = "SELECT * FROM users WHERE email='$email' AND password='$pass'";
+		$sql = "SELECT * FROM users WHERE email='$email'";
 		$result = $conn->query($sql);
 
 		if ($result->num_rows === 1) {
 			$row = $result->fetch_assoc();
-			$_SESSION['email'] = $row['email'];
-			$_SESSION['name'] = $row['name'];
-			header("Location: home.php");
+			if (password_verify($pass, $row['password'])) {
+				$_SESSION['email'] = $row['email'];
+				$_SESSION['name'] = $row['name'];
+				header("Location: home.php");
+				exit();
+			}
+			else {
+				$errorMessage = "incorrect password";
+			}
 		}
 		else {
-			$errorMessage = "incorrect email or password.";
+			$errorMessage = "email does not exist.";
 		}
 	}
  ?>

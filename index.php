@@ -14,18 +14,16 @@
 		$name = $_POST['name'];
 		$email = $_POST['email'];
 		if ($_POST['pass'] === $_POST['confirmPass']) {
-			$pass = $_POST['pass'];
+			$pass = password_hash($_POST['pass'], PASSWORD_DEFAULT);
+			if ($stmt->execute()) {
+				$successMessage = "Account created successfully.";
+			}
+			else{
+				$errorMessage = "email already exist.";
+			}
 		}
 		else{
-			$confirmPassErr = "Password is not matching.";
-			exit();
-		}
-
-		if ($stmt->execute()) {
-			$successMessage = "Account created successfully.";
-		}
-		else{
-			$errorMessage = "email is already exist.";
+			$confirmPassErr = "*Password is not matching.";
 		}
 	}
 
